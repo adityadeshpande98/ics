@@ -110,19 +110,6 @@ class SignUpView(GuestOnlyView, FormView):
             user.username = f'user_{user.id}'
             user.save()
 
-        if settings.ENABLE_USER_ACTIVATION:
-            code = get_random_string(20)
-
-            act = Activation()
-            act.code = code
-            act.user = user
-            act.save()
-
-            send_activation_email(request, user.email, code)
-
-            messages.success(
-                request, _('You are signed up. To activate the account, follow the link sent to the mail.'))
-        else:
             raw_password = form.cleaned_data['password1']
 
             user = authenticate(username=user.username, password=raw_password)
@@ -326,3 +313,5 @@ class RestorePasswordDoneView(BasePasswordResetDoneView):
 
 class LogOutView(LoginRequiredMixin, BaseLogoutView):
     template_name = 'accounts/log_out.html'
+
+
